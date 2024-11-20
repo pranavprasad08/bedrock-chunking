@@ -56,7 +56,7 @@ class PDFProcessor:
 
         # Save images to s3
         with ThreadPoolExecutor(max_workers=4) as executor:
-            for key, img_file in images.item():
+            for key, img_file in images.items():
                 write_img_to_s3(s3_client, bucket_name, key, img_file)
 
         return md_text
