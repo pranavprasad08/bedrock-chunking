@@ -44,8 +44,9 @@ class PDFProcessor:
 
         for page in pages:
             text = page['text']
+            page_no = page['metadata']['page']
             text, images = self.image_processor.process_images(text, s3_client, bucket_name)
-            self.logger.info(f"{filename} images prorcessed")
+            self.logger.info(f"{filename, page_no} images prorcessed")
             md_text += text
         
         # Save Markdown content to a file
@@ -55,7 +56,7 @@ class PDFProcessor:
         self.logger.info(f"Markdown file saved as: {s3_md_key}")
 
         # Save images to s3
-        with ThreadPoolExecutor(max_workers=4) as executor:
+        with ThreadPoolExecutor(max_workers=8) as executor:
             for key, img_file in images.items():
                 write_img_to_s3(s3_client, bucket_name, key, img_file)
 
