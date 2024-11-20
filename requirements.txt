@@ -1,0 +1,7 @@
+pymupdf4llm
+pymupdf
+langchain
+langchain_text_splitters
+boto3
+Pillow
+transformers

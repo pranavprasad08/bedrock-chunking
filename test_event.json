@@ -1,0 +1,23 @@
+{
+  "version": "1.0",
+  "knowledgeBaseId": "3DFNOXQ1YA",
+  "dataSourceId": "GOLO0XFFXM",
+  "ingestionJobId": "WBAVY2KIX1",
+  "bucketName": "custom-chunking-temp",
+  "priorTask": "CHUNKING",
+  "inputFiles": [
+    {
+      "contentBatches": [
+        {
+          "key": "test/EX-Boiler-Specifications-EXH-300-07.pdf_1.JSON"
+        }
+      ],
+      "originalFileLocation": {
+        "type": "S3",
+        "s3_location": {
+          "uri": "s3://pranav-rag-bedrock/EX-Boiler-Specifications-EXH-300-07.pdf"
+        }
+      }
+    }
+  ]
+}
