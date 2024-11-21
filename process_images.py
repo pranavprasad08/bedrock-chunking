@@ -3,13 +3,12 @@ from PIL import Image
 from io import BytesIO
 import re
 import os
-from concurrent.futures import ThreadPoolExecutor
 
 class ImageProcessor:
     def __init__(self):
 
          # Load a vision model like CLIP
-        self.pipe = pipeline("image-to-text", model="./local_models/blip-image-captioning-base") 
+        self.pipe = pipeline("image-to-text", model="./local_models/vit-gpt2-image-captioning") 
     
     def process_images(self, markdown_text, s3_client, bucket_name):
         """
@@ -20,8 +19,6 @@ class ImageProcessor:
         # Pattern to find local image paths in Markdown
         image_pattern = re.compile(r'!\[\]\((.*?)\)')
 
-        images = {}
-
         # Function to process each match and add metadata
         def add_metadata(match):
             image_path = match.group(1)
@@ -29,13 +26,17 @@ class ImageProcessor:
             img_name = os.path.basename(image_path)
             key = 'extracted_data/' + img_name
 
-            images[key]= image_path
-
             s3_uri = f"s3://{bucket_name}/{key}"
             
             # Generate the summary using the image summarizer function
-            image_summary = self.image_summary(image_path)
-            
+            with open(image_path, 'rb') as img_file:
+                img_data = img_file.read()
+                img_file.seek(0)
+                upload_file(s3_client, bucket_name, key, img_file)
+                print(f"Uploaded {image_path} to s3://{bucket_name}/{key}")
+                
+            image_summary = self.image_summary(img_data)
+
             # Construct the metadata string
             metadata = f'<!-- image: {s3_uri} summary: "{image_summary}" -->'
 
@@ -45,13 +46,11 @@ class ImageProcessor:
         # Substitute each image in the markdown with its metadata-enhanced version
         updated_markdown = image_pattern.sub(add_metadata, markdown_text)
 
-        return updated_markdown, images
+        return updated_markdown
     
-    def image_summary(self, img_path):
+    def image_summary(self, img_data):
         
         #load images
-        with open(img_path, 'rb') as img_file:
-            img_data = img_file.read()
         image = Image.open(BytesIO(img_data))
 
         #input image to pipeline
@@ -60,13 +59,12 @@ class ImageProcessor:
     
         return summary
 
-def upload_file(s3_client, bucket, key, local_file_path):
+def upload_file(s3_client, bucket, key, filepath):
     """
     Uploads a single file to S3.
+    not currently used 
     """
-    with open(local_file_path, 'rb') as file:
-        s3_client.upload_fileobj(file, bucket, key, ExtraArgs={'ContentType': 'image/jpeg'})
-    print(f"Uploaded {local_file_path} to s3://{bucket}/{key}")
-
+    
+    s3_client.upload_fileobj(filepath, bucket, key, ExtraArgs={'ContentType': 'image/jpeg'})
 
      
