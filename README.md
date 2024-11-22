@@ -7,6 +7,7 @@ Welcome to the **Bedrock Chunking** repository! This project provides a custom c
 - **Custom Chunking Function**: A scalable chunking method to process documents and prepare them for LLM-based knowledge base indexing.
 - **AWS Integration**: Uses AWS Lambda to execute the chunking function, leveraging Amazon EFS to store and access the necessary model.
 - **Document Types Supported**: The solution is capable of processing PDFs and other document formats while retaining the images and metadata for more context-aware embeddings.
+- **Extracts Tables and Images**: Capable of extracting tables and images from documents to enhance the quality of knowledge representation.
 - **Bedrock Knowledge Base Creation**: Prepares the chunked data for Amazon Bedrock, ensuring efficient knowledge representation for retrieval-based tasks.
 
 ## Setup
