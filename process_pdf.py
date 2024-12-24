@@ -35,7 +35,7 @@ class PDFProcessor:
         :param filename: Original filename of the PDF, used to generate the Markdown filename
         """
         # Convert to Markdown and save images to the specified image directory
-        pages = pymupdf4llm.to_markdown(filename, page_chunks=True, write_images=True, image_path=self.image_dir, image_format='jpg')
+        pages = pymupdf4llm.to_markdown(filename, page_chunks=True, write_images=True, image_path=self.image_dir, image_format='jpg', force_text=True)
         self.logger.info(f"{filename} parsed")
 
         md_text = ""
