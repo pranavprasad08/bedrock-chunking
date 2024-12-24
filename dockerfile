@@ -1,7 +1,8 @@
 # Use the AWS Lambda Python 3.12 base image (change as needed)
 FROM public.ecr.aws/lambda/python:3.12
+
 # Copy the entire 'models' folder from the host to the container
-COPY local_models/vit-gpt2-image-captioning ./local_models/vit-gpt2-image-captioning
+COPY local_models/Qwen2-VL-2B-Instruct ./local_models/Qwen2-VL-2B-Instruct
 
 # Install dependencies (e.g., pymupdf4llm)
 COPY requirements.txt ./
