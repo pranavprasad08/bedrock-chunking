@@ -1,11 +1,14 @@
 # Specify your local folder for storing the model
-local_folder = r"C:\Users\prana\Desktop\lambda-chunking\local_models\Qwen2-VL-2B-Instruct"
+local_folder = r"C:\Users\prana\Desktop\lambda-chunking\local_models\Florence-2-base-ft"
 
-# Load model directly
-from transformers import AutoProcessor, AutoModelForImageTextToText
+from transformers import AutoProcessor, AutoModelForCausalLM 
+import torch
 
-processor = AutoProcessor.from_pretrained("Qwen/Qwen2-VL-2B-Instruct")
-model = AutoModelForImageTextToText.from_pretrained("Qwen/Qwen2-VL-2B-Instruct")
-# Save the model locally
+device = "cuda:0" if torch.cuda.is_available() else "cpu"
+torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
+
+model = AutoModelForCausalLM.from_pretrained("microsoft/Florence-2-base-ft", torch_dtype=torch_dtype, trust_remote_code=True).to(device)
+processor = AutoProcessor.from_pretrained("microsoft/Florence-2-base-ft", trust_remote_code=True)
+
 model.save_pretrained(local_folder)
 processor.save_pretrained(local_folder)

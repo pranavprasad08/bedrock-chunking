@@ -8,8 +8,6 @@ logger.setLevel(logging.DEBUG)
 from create_chunks import Chunker
 from process_images import ImageProcessor
 
-os.environ['TRANSFORMERS_CACHE'] = "/tmp/tfm_cache"
-
 def lambda_handler(event, context):
     logger.debug('input={}'.format(json.dumps(event)))
     s3 = boto3.client('s3')
