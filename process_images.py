@@ -1,11 +1,9 @@
-from transformers import AutoModelForCausalLM, AutoProcessor, AutoConfig
-from transformers.dynamic_module_utils import get_imports
+from transformers import AutoModelForCausalLM, AutoProcessor
 from PIL import Image
-from io import BytesIO
 import re
 import os
 import torch 
-from unittest.mock import patch
+import json 
 
 class ImageProcessor:
     def __init__(self):
@@ -48,10 +46,7 @@ class ImageProcessor:
 
             # Upload the image to S3
             with open(image_path, 'rb') as img_file:
-                img_data = img_file.read()
-                img_file.seek(0)
                 self.upload_file(s3_client, bucket_name, key, img_file)
-                print(f"Uploaded {image_path} to {s3_uri}")
 
             # Generate image summary with instructions and Markdown context
             image_summary = self.image_summary(image_path, markdown_text)
@@ -103,7 +98,9 @@ class ImageProcessor:
 
         parsed_answer = self.processor.post_process_generation(generated_text, task=task_prompt, image_size=(image.width, image.height))
 
-        return parsed_answer
+        summary = json(parsed_answer)
+
+        return summary[task_prompt]
     
     @staticmethod
     def upload_file(s3_client, bucket, key, filepath):
@@ -125,10 +122,3 @@ class ImageProcessor:
         except Exception as e:
             print(f"Failed to upload {key} to {bucket}: {e}")
     
-
-def fixed_get_imports(filename: str | os.PathLike) -> list[str]:
-    if not str(filename).endswith("modeling_florence2.py"):
-        return get_imports(filename)
-    imports = get_imports(filename)
-    imports.remove("flash_attn")
-    return imports
