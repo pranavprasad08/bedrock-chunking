@@ -5,3 +5,5 @@ langchain_text_splitters
 boto3
 Pillow
 transformers
+timm
+einops
