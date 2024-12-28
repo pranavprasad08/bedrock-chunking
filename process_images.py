@@ -1,11 +1,9 @@
-from transformers import AutoModelForCausalLM, AutoProcessor, AutoConfig
+from transformers import AutoModelForCausalLM, AutoProcessor
 from transformers.dynamic_module_utils import get_imports
 from PIL import Image
-from io import BytesIO
 import re
 import os
 import torch 
-from unittest.mock import patch
 
 class ImageProcessor:
     def __init__(self):
